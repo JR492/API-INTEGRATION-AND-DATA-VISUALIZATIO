@@ -1,0 +1,100 @@
+Here's an example of Python API integration and data visualization using the OpenWeatherMap API and Matplotlib library.
+
+API Integration
+We'll use the `requests` library to send a GET request to the OpenWeatherMap API and fetch the weather data.
+
+```
+import requests
+import json
+import matplotlib.pyplot as plt
+
+OpenWeatherMap API endpoint and API key
+api_endpoint = "http://api.openweathermap.org/data/2.5/forecast"
+api_key = "YOUR_API_KEY"
+
+City name
+city = "London"
+
+Parameters for API request
+params = {
+    "q": city,
+    "appid": api_key,
+    "units": "metric"
+}
+
+Send GET request to API
+response = requests.get(api_endpoint, params=params)
+
+Check if response is successful
+if response.status_code == 200:
+    # Parse JSON response
+    data = response.json()
+else:
+    print("Failed to retrieve data")
+```
+
+Data Visualization
+We'll use the `matplotlib` library to visualize the temperature data.
+
+```
+Extract temperature data
+temps = [item["main"]["temp"] for item in data["list"]]
+
+Extract time data
+times = [item["dt_txt"] for item in data["list"]]
+
+Create plot
+plt.figure(figsize=(10, 6))
+plt.plot(times, temps)
+plt.xlabel("Time")
+plt.ylabel("Temperature (°C)")
+plt.title(f"Weather Forecast for {city}")
+plt.xticks(rotation=45)
+plt.show()
+```
+
+Full Code
+```
+import requests
+import json
+import matplotlib.pyplot as plt
+
+def get_weather_data(city, api_key):
+    api_endpoint = "http://api.openweathermap.org/data/2.5/forecast"
+    params = {
+        "q": city,
+        "appid": api_key,
+        "units": "metric"
+    }
+    response = requests.get(api_endpoint, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to retrieve data")
+        return None
+
+def visualize_weather_data(data, city):
+    temps = [item["main"]["temp"] for item in data["list"]]
+    times = [item["dt_txt"] for item in data["list"]]
+    plt.figure(figsize=(10, 6))
+    plt.plot(times, temps)
+    plt.xlabel("Time")
+    plt.ylabel("Temperature (°C)")
+    plt.title(f"Weather Forecast for {city}")
+    plt.xticks(rotation=45)
+    plt.show()
+
+def main():
+    city = "London"
+    api_key = "YOUR_API_KEY"
+    data = get_weather_data(city, api_key)
+    if data:
+        visualize_weather_data(data, city)
+
+if __name__ == "__main__":
+    main()
+```
+
+Replace `YOUR_API_KEY` with your actual OpenWeatherMap API key. This code fetches the 5-day weather forecast for London and visualizes the temperature data.
+
+Would you like me to explain any part of the code or help with modifications?
